@@ -8,11 +8,13 @@
         "moduleResolution": "node",
         "sourceMap": true,
         "outDir": "dist",
-        "baseUrl": ".",
+        "rootDir": "./src", // tells TS where ts files are
+        "baseUrl": "./src",
         "paths": {
             "*": [
                 "node_modules/*",
-                "src/types/*"
+                "types/*",
+                "./"
             ]
         }
     },

@@ -1,10 +1,10 @@
 {
-    "name": "express-typescript-starter",
+    "name": "node-ts-bp",
     "version": "0.1.0",
     "description": "A starting point for Node.js express apps with TypeScript",
     "repository": {
         "type": "git",
-        "url": "https://github.com/Microsoft/TypeScript-Node-Starter"
+        "url": ""
     },
     "author": "Bowden Kelly",
     "license": "MIT",
@@ -89,6 +89,7 @@
         "jest": "^24.9.0",
         "node-sass": "^4.14.1",
         "nodemon": "^1.19.2",
+        "prettier": "^2.1.2",
         "shelljs": "^0.8.3",
         "supertest": "^4.0.2",
         "ts-jest": "^24.1.0",
