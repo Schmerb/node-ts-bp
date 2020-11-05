@@ -1,0 +1,118 @@
+/**
+* {{ properCase name }} Router
+*
+*
+*/
+
+import { Application, Request, Response } from 'express'
+import bodyParser from 'body-parser'
+
+import * as {{ camelCase name }}Controller from './{{ camelCase name }}controller';
+
+// API keys and Passport configuration
+import * as passportConfig from '../../config/passport';
+
+const jsonParser = bodyParser.json();
+
+function {{ camelCase name }}Routes(app: Application) {
+/**
+* List {{ properCase name }}s
+*/
+app.get('/api/{{ camelCase name }}s', async (req: Request, res: Response) => {
+return {{ camelCase name }}Controller
+.list{{ properCase name }}s(req.query)
+.then((data: any[]) => {
+return res.status(200).json(data); // 200 OK
+})
+.catch((err) => {
+if (err.reason === 'ValidationError') {
+return res.status(err.code).json(err);
+}
+return res.status(err.code || 500).send(err)
+});
+});
+
+/**
+* Fetch {{ properCase name }} by id
+*/
+app.get('/api/{{ camelCase name }}s/:id', async (req: Request, res: Response) => {
+const { id } = req.params;
+
+return {{ camelCase name }}Controller
+.fetch{{ properCase name }}ById(id)
+.then((data: any) => {
+return res.status(200).json(data); // 200 OK
+})
+.catch((err) => {
+if (err.reason === 'ValidationError') {
+return res.status(err.code).json(err);
+}
+return res.status(err.code || 500).send(err)
+});
+});
+
+/**
+* Create {{ properCase name }}
+*/
+app.post(
+'/api/{{ camelCase name }}s',
+jsonParser,
+passportConfig.isAuthenticated,
+async (req: Request, res: Response) => {
+const { body, user } = req;
+return {{ camelCase name }}Controller
+.create{{ properCase name }}(body, user._id)
+.then((data: any) => {
+return res.status(200).json(data); // 200 OK
+})
+.catch((err) => {
+if (err.reason === 'ValidationError') {
+return res.status(err.code).json(err);
+}
+return res.sendStatus(err);
+});
+}
+);
+
+/**
+* Update {{ properCase name }}
+*/
+app.put('/api/{{ camelCase name }}s/:id', passportConfig.isAuthenticated, async (req: Request, res: Response) => {
+const { id } = req.params;
+const { body, user } = req;
+
+return {{ camelCase name }}Controller
+.update{{ properCase name }}(id, body, user._id)
+.then((updated{{ properCase name }}) => {
+return res.status(200).json(updated{{ properCase name }});
+})
+.catch((err) => {
+if (err.reason === 'ValidationError') {
+return res.status(err.code).json(err);
+}
+return res.status(err.code || 500).send(err)
+});
+});
+
+/**
+* Destroy technician
+*/
+app.delete('/api/{{ camelCase name }}s/:id', passportConfig.isAuthenticated, async (req: Request, res: Response) => {
+const { id } = req.params;
+const { user } = req;
+
+return {{ camelCase name }}Controller
+.destroy{{ properCase name }}(id, user._id)
+.then(() => {
+return res.sendStatus(200); // 200 OK
+})
+.catch((err) => {
+if (err.reason === 'ValidationError') {
+return res.status(err.code).json(err);
+}
+return res.status(err.code || 500).send(err)
+});
+});
+}
+
+export default {{ camelCase name }}Routes;

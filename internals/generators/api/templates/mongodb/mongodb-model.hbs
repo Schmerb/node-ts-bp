@@ -1,0 +1,49 @@
+/**
+* {{ properCase name }} Model
+*
+*/
+import mongoose from 'mongoose';
+
+
+export type {{ properCase name }}Document = mongoose.Document & {
+_creator: string;
+_updatedAt: number;
+apiRepr: () => any;
+}
+
+const {{ properCase name }}Schema = new mongoose.Schema({
+// TODO: new fields go here
+_creator: {
+type: mongoose.Schema.Types.ObjectId,
+ref: 'User',
+default: null,
+},
+});
+
+{{ properCase name }}Schema.pre('save', function (next) {
+this._updatedAt = Date.now();
+next();
+});
+
+const getCreator = (_creator: any) => {
+if (_creator && 'apiRepr' in _creator) {
+return _creator.apiRepr();
+}
+return _creator;
+};
+
+{{ properCase name }}Schema.methods.apiRepr = function () {
+return {
+id: this._id,
+// TODO: new fields go here
+_creator: getCreator(this._creator),
+// _id is an ObjectID which has the createdAt timestamp encoded into first four bytes
+_createdAt: this._id.getTimestamp(),
+_updatedAt: this._updatedAt,
+};
+};
+
+export const {{ properCase name }} = mongoose.model<{{ properCase name }}Document>('{{ properCase name }}',
+  {{ properCase name }}Schema);
+
+  export default {{ properCase name }};

@@ -3,7 +3,7 @@
  * api Routes
  * 
  *  */
-import { Application } from 'express';
+import { Application, Request, Response } from 'express';
 import passport from 'passport';
 
 

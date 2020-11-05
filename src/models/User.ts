@@ -3,6 +3,7 @@ import crypto from 'crypto';
 import mongoose from 'mongoose';
 
 export type UserDocument = mongoose.Document & {
+  _id: string;
   email: string;
   password: string;
   passwordResetToken: string;
@@ -56,6 +57,7 @@ const userSchema = new mongoose.Schema({
 userSchema.pre('save', function save(next) {
   const user = this as UserDocument;
   if (!user.isModified('password')) { return next(); }
+  // if changing password, encrypt it!
   bcrypt.genSalt(10, (err, salt) => {
     if (err) { return next(err); }
     bcrypt.hash(user.password, salt, undefined, (err: mongoose.Error, hash) => {

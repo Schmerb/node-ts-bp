@@ -1,0 +1,189 @@
+/**
+* {{ properCase name }} Controller
+*
+*
+*/
+
+
+import {{ properCase name }}s from '../../models/{{ camelCase name }}';
+import {
+checkForFields,
+checkForValidStrings,
+checkIfNotFound,
+checkIfAuthorized,
+} from '../../utils/validators';
+
+const isDev = process.env.NODE_ENV !== 'production';
+
+/**
+* List {{ properCase name }}s
+*/
+export const list{{ properCase name }}s = (query: any) =>
+new Promise((resolve, reject) => {
+const queryableFields = ['_creator', '_createdAt'];
+const queries: any = {};
+if (query) {
+for (const field of queryableFields) {
+if (field in query) {
+queries[field] = {
+$regex: new RegExp(`^${query[field]}`, 'i'),
+};
+}
+}
+}
+
+const populate = query.populate === 'true';
+const page = parseInt(query.page, 10) || 0;
+const perPage = parseInt(query.limit, 10) || 10;
+{{ properCase name }}s.find()
+.populate(populate && '_creator')
+.limit(perPage)
+.skip(perPage * page)
+.exec()
+.then(({{ camelCase name }}s) => {
+resolve({{ camelCase name }}s.map(({{ camelCase name }}) => {{ camelCase name }}.apiRepr()));
+})
+.catch((err) => {
+// eslint-disable-next-line no-console
+if (isDev) console.error(err);
+
+reject({ code: 500, err }); // 500 Internal Server Error
+});
+});
+
+/**
+* Fetch {{ properCase name }} by id
+*/
+export const fetch{{ properCase name }}ById = ({{ camelCase name }}Id: string) =>
+new Promise((resolve, reject) => {
+{{ properCase name }}s.findById({{ camelCase name }}Id)
+.exec()
+.then(({{ camelCase name }}) => {
+resolve({{ camelCase name }} ? {{ camelCase name }}.apiRepr() : null);
+})
+.catch((err) => {
+// eslint-disable-next-line no-console
+if (isDev) console.error(err);
+
+reject({ code: 500, err }); // 500 Internal Server Error
+});
+});
+
+/**
+* create {{ properCase name }}
+*
+*/
+export const create{{ properCase name }} = (new{{ properCase name }}: any, userId: string) =>
+new Promise((resolve, reject) => {
+// - - - - - - - - - -
+// Validate {{ camelCase name }} fields
+// - - - - - - - - - -
+const optionalFields = ['']; // TODO: add optional fields
+
+// 1. check for required fields
+const fields = ['']; // TODO: add required fields
+const fieldError = checkForFields(new{{ properCase name }}, fields);
+if (fieldError) return reject(fieldError); // return to stop code execution
+// 2. check for valid string fields
+const stringFields = ['']; // TODO: add string fields
+const stringError = checkForValidStrings(new{{ properCase name }}, stringFields);
+if (stringError) return reject(stringError);
+
+// create {{ camelCase name }} object,
+// add required _creator
+const {{ camelCase name }}: any = {
+url: new{{ properCase name }}.url,
+_creator: userId,
+};
+// add optional fields
+for (const field of optionalFields) {
+if (field in new{{ properCase name }}) {
+{{ camelCase name }}[field] = new{{ properCase name }}[field];
+}
+}
+{{ properCase name }}s.create({{ camelCase name }})
+.then((_{{ camelCase name }}) => {
+resolve(_{{ camelCase name }}.apiRepr());
+})
+.catch((err) => {
+// eslint-disable-next-line no-console
+if (isDev) console.error(err);
+
+reject({ code: 500, err }); // 500 Internal Server Error
+});
+});
+
+
+/**
+* update {{ properCase name }}
+*/
+export const update{{ properCase name }} = ({{ camelCase name }}Id: string, data: any, userId: string) =>
+new Promise((resolve, reject) => {
+(async () => {
+const updatableFields = [''];
+
+try {
+// make sure user is owner
+const {{ camelCase name }}: any = await {{ properCase name }}s.findById({{ camelCase name }}Id).exec();
+// if no {{ camelCase name }}, let user know
+const notFoundErr = checkIfNotFound({{ camelCase name }});
+if (notFoundErr) return reject(notFoundErr);
+// make sure user is authorized to update/write {{ camelCase name }}
+const notAuthErr = checkIfAuthorized({{ camelCase name }}, userId, 'update', '{{ properCase name }}');
+if (notAuthErr) return reject(notAuthErr);
+//
+// Good to Go!
+// perform update
+//
+
+// const updated{{ properCase name }} = {};
+for (const field of updatableFields) {
+if (field in data) {
+// updated{{ properCase name }}[field] = data[field];
+{{ camelCase name }}[field] = data[field];
+}
+}
+
+{{ camelCase name }}.save().catch((saveError: string) => {
+// eslint-disable-next-line
+console.log({ saveError });
+reject({ code: 500, err: saveError }); // 500 Internal Server Error
+});
+
+return resolve({{ camelCase name }}.apiRepr());
+} catch (err) {
+// eslint-disable-next-line
+console.log({ err });
+
+reject({ code: 500, err }); // 500 Internal Server Error
+}
+})();
+});
+
+/**
+* Destroy {{ properCase name }}
+*/
+export const destroy{{ properCase name }} = ({{ camelCase name }}Id: string, userId: string) =>
+new Promise(async (resolve, reject) => {
+try {
+// first lookup object and see if it is created by userId
+const {{ camelCase name }} = await {{ properCase name }}s.findById({{ camelCase name }}Id).exec();
+// if no {{ camelCase name }}, let user know
+const notFoundErr = checkIfNotFound({{ camelCase name }});
+if (notFoundErr) return reject(notFoundErr);
+// make sure user is authorized to update/write {{ camelCase name }}
+const notAuthErr = checkIfAuthorized({{ camelCase name }}, userId, 'delete', '{{ properCase name }}');
+if (notAuthErr) return reject(notAuthErr);
+// Good to Go!
+// delete document directly on instance
+{{ camelCase name }}.remove();
+
+// let user know success
+resolve(true);
+} catch (err) {
+// eslint-disable-next-line no-console
+if (isDev) console.error(err);
+
+reject({ code: 500, err }); // 500 Internal Server Error
+}
+});

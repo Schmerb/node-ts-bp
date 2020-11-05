@@ -3,13 +3,24 @@
  * User Routes
  * 
  *  */
+import { Application, Request, Response } from 'express';
 
 import * as userController from './userController';
 
 // API keys and Passport configuration
 import * as passportConfig from '../../config/passport';
 
-export const userRoutes = (app) => {
+export const userRoutes = (app: Application) => {
+  app.get('/users', (req: Request, res: Response) => {
+    userController.getUsers()
+      .then((data: any) => {
+        res.status(200).json({users: data});
+      })
+      .catch(err => {
+        return res.status(err.code || 500).send(err);
+      });
+  });
+
   app.get('/login', userController.getLogin);
   app.post('/login', userController.postLogin);
   app.get('/logout', userController.logout);

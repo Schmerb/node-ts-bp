@@ -1,0 +1,40 @@
+/**
+* {{ properCase name }} Router
+*
+*
+*/
+import { Application, Request, Response } from 'express'
+import bodyParser from 'body-parser';
+
+import * as {{ camelCase name }}Controller from './{{ camelCase name }}Controller';
+
+import * as passportConfig from '../../config/passport';
+
+const jsonParser = bodyParser.json();
+
+function {{ camelCase name }}Routes(app: Application) {
+app.get('/api/{{ camelCase name }}', passportConfig.isAuthenticated, (req: Request, res: Response) => {
+res.send('SEND ITT!!');
+});
+
+app.post(
+'/api/{{ camelCase name }}',
+jsonParser,
+passportConfig.isAuthenticated,
+(req: Request, res: Response) =>
+{{ camelCase name }}Controller
+.myServiceControllerMethod(req.body)
+.then((data) => {
+console.log({ data });
+return res.status(200).json(data); // 200 OK
+})
+.catch((err) => {
+if (err.reason === 'ValidationError') {
+return res.status(err.code).json(err);
+}
+return res.status(err.code || 500).send(err);
+}),
+);
+}
+
+module.exports = {{ camelCase name }}Routes;

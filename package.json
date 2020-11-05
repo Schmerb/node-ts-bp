@@ -24,7 +24,8 @@
         "watch-node": "nodemon dist/server.js",
         "watch-sass": "node-sass -w src/public/css/main.scss dist/public/css/main.css",
         "watch-test": "npm run test -- --watchAll",
-        "watch-ts": "tsc -w"
+        "watch-ts": "tsc -w",
+        "generate": "plop --plopfile internals/generators/index.js"
     },
     "dependencies": {
         "async": "^3.1.0",
@@ -89,6 +90,8 @@
         "jest": "^24.9.0",
         "node-sass": "^4.14.1",
         "nodemon": "^1.19.2",
+        "plop": "^2.7.4",
+        "plop-prettier": "^3.0.0",
         "prettier": "^2.1.2",
         "shelljs": "^0.8.3",
         "supertest": "^4.0.2",

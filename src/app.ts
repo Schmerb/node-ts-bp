@@ -26,7 +26,7 @@ connectToDb(app);
 bindMiddleware(app);
 
 //
-// Router
+// app routes
 //
 initializeApi(app);
 

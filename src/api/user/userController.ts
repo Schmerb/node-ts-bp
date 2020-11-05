@@ -23,6 +23,18 @@ export const getLogin = (req: Request, res: Response) => {
   });
 };
 
+export const getUsers = () => new Promise((resolve, reject) => {
+  User.find()
+    .exec()
+    .then((data: UserDocument[]) => {
+      resolve(data);
+    })
+    .catch((err: any) => {
+      reject(err);
+    });
+});
+
+
 /**
  * Sign in using email and password.
  * @route POST /login

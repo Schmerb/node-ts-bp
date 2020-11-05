@@ -1,0 +1,42 @@
+/**
+* {{ properCase name }} Controller
+*
+*
+*/
+
+import {{ properCase name }}Service from '../../services/{{ camelCase name }}';
+import {
+checkForFields,
+checkForValidStrings,
+// checkForSizedFields,
+// checkForValidType,
+} from '../../utils/validators';
+
+const isDev = process.env.NODE_ENV !== 'production';
+
+/**
+* TODO:
+*/
+export const myServiceControllerMethod = (data: any) =>
+new Promise((resolve, reject) => {
+// 1. check for required fields
+const fields = ['']; // TODO:
+const fieldError = checkForFields(data, fields);
+if (fieldError) return reject(fieldError); // return to stop code execution
+// 1. check for string fields
+const stringFieldError = checkForValidStrings(data, fields);
+if (stringFieldError) return reject(stringFieldError); // return to stop code execution
+
+// const {}: any = data;
+
+{{ properCase name }}Service.serviceMethod()
+.then((res) => {
+resolve(res);
+})
+.catch((err) => {
+// eslint-disable-next-line no-console
+if (isDev) console.error(err);
+
+reject({ code: 500, err }); // 500 Internal Server Error
+});
+});

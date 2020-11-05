@@ -10,8 +10,8 @@ import userRoutes from './user';
 import contactRoutes from './contact';
 import homeRoutes from './home';
 import apiRoutes from './api';
+// *__imports
 // hook for PLOP file editing
-// *__import
 
 
 
@@ -32,6 +32,6 @@ export const initializeApi = async (app: Application) => {
   apiRoutes(app);
   homeRoutes(app);
 
+// *__init
   // hook for PLOP file editing
-  // *__init
 };
